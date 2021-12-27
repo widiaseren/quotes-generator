@@ -25,14 +25,27 @@ function newQuote(){
 
 async function getQuote(){
   loading();
+  // method one
   try{
     const response = await fetch(apiUrl);
     dtQuotes = await response.json();
     // console.log(dtQuotes)
     newQuote();
-  } catch{
-    console.log("Error getQuote");
+  } catch(error){
+    console.log("Woops, no quote", error);
   }
+
+  // method two
+  // const proxyUrl = 'https://cors-anywhere.herokuapp.com/'
+  // const apiUrlx = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json';
+  // try{
+  //   const response = await fetch(proxyUrl + apiUrlx);
+  //   const data = await response.json();
+  //   console.log(data)
+  // }catch(error){
+  //   getQuote()
+  //   console.log("Woops, no quote", error);
+  // }
   complete();
 }
 
