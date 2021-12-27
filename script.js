@@ -1,21 +1,58 @@
-let dtQuotes = []
-const apiUrl = 'https://type.fit/api/quotes'
+let dtQuotes = [];
+const apiUrl = 'https://type.fit/api/quotes';
+
+const quoteContainer = document.getElementById("quote-container")
+const quoteText = document.getElementById("quote")
+const authorText = document.getElementById("author")
+const twitterBtn = document.getElementById("twitter")
+const newQuoteBtn = document.getElementById("new-quote")
+const loader = document.getElementById("loader")
 
 // show random quote
 function newQuote(){
+  loading();
   const randomQuote = dtQuotes[Math.floor(Math.random() * dtQuotes.length)];
-  console.log(randomQuote)
+  // console.log(randomQuote)
+  if(randomQuote.text.length >= 50)
+    quoteText.classList.add('long-quote');
+  else
+    quoteText.classList.remove('long-quote');
+
+  quoteText.textContent = randomQuote.text;
+  authorText.textContent = randomQuote.author ? randomQuote.author : 'Unknown';
+  complete();
 }
 
 async function getQuote(){
+  loading();
   try{
-    const response = await fetch(apiUrl)
-    dtQuotes = await response.json()
+    const response = await fetch(apiUrl);
+    dtQuotes = await response.json();
     // console.log(dtQuotes)
-    newQuote()
+    newQuote();
   } catch{
-    console.log("Error getQuote")
+    console.log("Error getQuote");
   }
+  complete();
 }
 
+function tweetQuote(){
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${quoteText.textContent} - ${authorText.textContent}`;
+  window.open(twitterUrl, '_blank');
+}
+
+function loading(){
+  loader.hidden = false,
+  quoteContainer.hidden = true
+}
+
+function complete(){
+  loader.hidden = true,
+  quoteContainer.hidden = false
+}
+
+newQuoteBtn.addEventListener('click', newQuote);
+twitterBtn.addEventListener('click', tweetQuote);
+
 getQuote()
+// loading()
